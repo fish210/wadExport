@@ -15,4 +15,4 @@ old version file: https://github.com/LoL-Fantome/LeagueDownloader
 我深入研究了老外的源码，但是没有使用任何一行，这个是原创项目
 如果想拿比较完善的成品来使用，不想开发或者折腾，加我的群：905600556
 
-![image](https://raw.githubusercontent.com/fish210/wadExport/main/wadExport/WAD%E8%A7%A3%E5%8C%85%E5%99%A8.png)<br>
+![image](https://raw.githubusercontent.com/fish210/wadExport/main/wadExport/WAD%E8%A7%A3%E5%8C%85%E5%99%A82.png)<br>

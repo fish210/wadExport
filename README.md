@@ -13,6 +13,5 @@ old version file: https://github.com/LoL-Fantome/LeagueDownloader
 我的核心允许二次开发，自由使用，但是不要做有违法律的事，否则自负，多看开源协议
 
 我深入研究了老外的源码，但是没有使用任何一行，这个是原创项目
-交流群：905600556
 
 ![image](https://raw.githubusercontent.com/fish210/wadExport/main/wadExport/WAD%E8%A7%A3%E5%8C%85%E5%99%A82.png)<br>

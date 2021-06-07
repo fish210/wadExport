@@ -1,5 +1,5 @@
 # wadExport
-League of Legends WAD file export<br>
+League of Legends wad file export<br>
 
 core git: https://github.com/fish210<br>
 

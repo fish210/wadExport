@@ -2,8 +2,8 @@
 
 vector<Wad_Struct> vec;
 map <CString, CString> mp;
-CString wad_filePath;//WADÎÄ¼şÂ·¾¶
-UINT32 wad_count;//WADÎÄ¼şÊıÁ¿
+CString wad_filePath;//WADæ–‡ä»¶è·¯å¾„
+UINT32 wad_count;//WADæ–‡ä»¶æ•°é‡
 
 int main()
 {
@@ -12,21 +12,21 @@ int main()
 	hdll = LoadLibraryA("libzstd.dll");
 	if (hdll == 0)
 	{
-		cout << "load error, not is libzstd.dll ; Ä£¿é¼ÓÔØÊ§°Ü libzstd.dll\n" << endl;
+		cout << "load error, not libzstd.dll ; æ¨¡å—åŠ è½½å¤±è´¥ libzstd.dll\n" << endl;
 		return 0;
 	}
 	ZSTD_getDecSiz = (ZSTD_getDecompressedSize)GetProcAddress(hdll, "ZSTD_getDecompressedSize");
 	if (ZSTD_getDecSiz == 0)
 	{
 		FreeLibrary(hdll);
-		cout << "load error not is ZSTD_decompress ; ÕÒ²»µ½º¯Êı ZSTD_getDecompressedSize\n" << endl;
+		cout << "load error not ZSTD_decompress ; æ‰¾ä¸åˆ°å‡½æ•° ZSTD_getDecompressedSize\n" << endl;
 		return 0;
 	}
 	ZSTD_dec = (ZSTD_decompress)GetProcAddress(hdll, "ZSTD_decompress");//ZSTD_decompress
 	if (ZSTD_dec == 0)
 	{		
 		FreeLibrary(hdll);
-		cout << "load error not is ZSTD_decompress ; ÕÒ²»µ½º¯Êı ZSTD_decompress\n" << endl;
+		cout << "load error not ZSTD_decompress ; æ‰¾ä¸åˆ°å‡½æ•° ZSTD_decompress\n" << endl;
 		return 0;
 	}
 	//*********************************************************** Start
@@ -34,59 +34,59 @@ int main()
 	bool hash = load_hashes("hashes.game.txt");
 	if (hash == true)
 	{
-		int err = openfile("Map22LEVELS.wad.client");//´ò¿ªÎÄ¼ş
+		int err = openfile("Map22LEVELS.wad.client");//æ‰“å¼€æ–‡ä»¶
 		if (err == 0)
 		{
-			CreateDirectory("new", NULL);//´´½¨Ä¿Â¼
-			int err2 = export_all("new");//µ¼³öÎÄ¼ş
+			CreateDirectory("new", NULL);//åˆ›å»ºç›®å½•
+			int err2 = export_all("new");//å¯¼å‡ºæ–‡ä»¶
 		}
 		if (err == 0)
 		{
-			cout << "success ; µ¼³ö³É¹¦\n" << endl;
+			cout << "success ; å¯¼å‡ºæˆåŠŸ\n" << endl;
 		}
 		else
 		{
-			cout << "failure ; µ¼³öÊ§°Ü\n" << endl;
+			cout << "failure ; å¯¼å‡ºå¤±è´¥\n" << endl;
 		}
 	}
 	else
 	{
-		cout << "load hash err : hash file last line is Enter(0x0A) ? ; ¼ÓÔØ¹şÏ£Ê§°Ü£¬¹şÏ£ÎÄ¼şÒì³££¬¼ì²é×îºóÒ»ĞĞÊÇ·ñ»»ĞĞ·û\n" << endl;
+		cout << "load hash err : hash file last line is Enter(0x0A) ? ; åŠ è½½å“ˆå¸Œå¤±è´¥ï¼Œå“ˆå¸Œæ–‡ä»¶å¼‚å¸¸ï¼Œæ£€æŸ¥æœ€åä¸€è¡Œæ˜¯å¦æ¢è¡Œç¬¦\n" << endl;
 	}
 	return 0;
 }
-//´ò¿ªWADÎÄ¼ş
+//æ‰“å¼€WADæ–‡ä»¶
 int openfile(const char* in_filePath)
 {
 	ifstream in(in_filePath, ios::binary);
 	if (!in.is_open())
 	{
-		cout << "open file error ; ´ò¿ªwadÊ§°Ü£¬²»´æÔÚ»ò±»Õ¼ÓÃ" << endl;
+		cout << "open file error ; æ‰“å¼€wadå¤±è´¥ï¼Œä¸å­˜åœ¨æˆ–è¢«å ç”¨" << endl;
 		return 1;
 	}
-	int DataOffset = 0;//Êı¾İÆ«ÒÆ	
-	UINT32 ver_header = 0;//°æ±¾Í·
+	int DataOffset = 0;//æ•°æ®åç§»	
+	UINT32 ver_header = 0;//ç‰ˆæœ¬å¤´
 	UINT32 ver30 = 0x00035752;
 	UINT32 ver31 = 0x01035752;
 
 	in.read((char*)&ver_header, 4);
-	if (ver_header == ver31)//ÅĞ¶ÏÎÄ¼ş°æ±¾
+	if (ver_header == ver31)//åˆ¤æ–­æ–‡ä»¶ç‰ˆæœ¬
 	{
 		DataOffset = 268;
 	}
 	else
 	{
 		in.close();
-		cout << "file no is version 3.1 ; ¶ÁÈ¡Ê§°Ü£¬²»ÊÇ3.1°æ±¾" << endl;
+		cout << "file no is version 3.1 ; è¯»å–å¤±è´¥ï¼Œä¸æ˜¯3.1ç‰ˆæœ¬" << endl;
 		return 2;
 	}
 	wad_filePath = in_filePath;
 	in.seekg(0, ios::beg);
 	in.seekg(0, ios::end);
-	long long fileSize = in.tellg();//È¡ÎÄ¼ş´óĞ¡
+	long long fileSize = in.tellg();//å–æ–‡ä»¶å¤§å°
 	//cout << "fileSize:" << fileSize << endl;
 	in.seekg(DataOffset, ios::beg);
-	in.read((char*)&wad_count, 4);//È¡ÎÄ¼şÊıÁ¿
+	in.read((char*)&wad_count, 4);//å–æ–‡ä»¶æ•°é‡
 	//cout << "wad_count:" << wad_count << endl;
 
 	int tem_DataOffset = DataOffset + 4;
@@ -98,41 +98,41 @@ int openfile(const char* in_filePath)
 		}
 		else
 		{
-			UINT32 Offset = tem_DataOffset + 32 * i;//ÉèÖÃÆ«ÒÆÖµ
+			UINT32 Offset = tem_DataOffset + 32 * i;//è®¾ç½®åç§»å€¼
 			in.seekg(Offset, ios::beg);
 		}
 		UINT64 xxhash = 0;
-		in.read((char*)&xxhash, 8);//ÌõÄ¿Ãû	
+		in.read((char*)&xxhash, 8);//æ¡ç›®å	
 
 		char xxhash_tem[64];
 		sprintf_s(xxhash_tem, 64, "%016llx", xxhash);
 		CString xxhash_str = xxhash_tem;
 
 		UINT32 DataOffset = 0;
-		in.read((char*)&DataOffset, 4);//Êı¾İÆ«ÒÆ
+		in.read((char*)&DataOffset, 4);//æ•°æ®åç§»
 
 		UINT32 Compressed = 0;
-		in.read((char*)&Compressed, 4);//Ñ¹Ëõ´óĞ¡
+		in.read((char*)&Compressed, 4);//å‹ç¼©å¤§å°
 
 		UINT32 Uncompressed = 0;
-		in.read((char*)&Uncompressed, 4);//Î´Ñ¹Ëõ´óĞ¡
+		in.read((char*)&Uncompressed, 4);//æœªå‹ç¼©å¤§å°
 
 		UINT8 Ctype = 0;
-		in.read((char*)&Ctype, 1);//Ñ¹ËõÀàĞÍ
+		in.read((char*)&Ctype, 1);//å‹ç¼©ç±»å‹
 		Wad_Struct* p = new Wad_Struct();
-		p->xxHash_str = xxhash_str;//16½øÖÆÎÄ¼şÃû
+		p->xxHash_str = xxhash_str;//16è¿›åˆ¶æ–‡ä»¶å
 
 		CString mp_name;
 		if (mp.count(xxhash_str) != 0)
 		{
-			mp_name = mp[xxhash_str];//Èç¹ûmapÈİÆ÷¼ü´æÔÚ¾ÍÊ¹ÓÃ¹şÏ£±íµÄÎÄ¼şÃû
+			mp_name = mp[xxhash_str];//å¦‚æœmapå®¹å™¨é”®å­˜åœ¨å°±ä½¿ç”¨å“ˆå¸Œè¡¨çš„æ–‡ä»¶å
 		}
 		else
 		{
-			mp_name = xxhash_str;//Èç¹û²»´æÔÚ¾ÍÊÇÒªÎÄ±¾¹şÏ£Ãû
+			mp_name = xxhash_str;//å¦‚æœä¸å­˜åœ¨å°±æ˜¯è¦æ–‡æœ¬å“ˆå¸Œå
 		}
 
-		if (mp_name.GetLength() <= MAX_PATH / 2)//Èç¹ûÎÄ¼şÃû³¬¹ı130¸ö×Ö½Ú£¬ÎÄ¼şÃûÈ¡16Î»ÎÄ±¾¹şÏ£
+		if (mp_name.GetLength() <= MAX_PATH / 2)//å¦‚æœæ–‡ä»¶åè¶…è¿‡130ä¸ªå­—èŠ‚ï¼Œæ–‡ä»¶åå–16ä½æ–‡æœ¬å“ˆå¸Œ
 		{
 			p->FileName = mp_name;
 		}
@@ -150,13 +150,13 @@ int openfile(const char* in_filePath)
 	in.close();
 	return 0;
 }
-//µ¼³öÈ«²¿ÎÄ¼ş
+//å¯¼å‡ºå…¨éƒ¨æ–‡ä»¶
 int export_all(const char* out_directory)
 {
-	for (vector <Wad_Struct> ::iterator it = vec.begin(); it != vec.end(); it++)//Àú±éÈİÆ÷
+	for (vector <Wad_Struct> ::iterator it = vec.begin(); it != vec.end(); it++)//å†éå®¹å™¨
 	{
 		CString tem = out_directory;
-		CString FileName = tem + "\\" + it->FileName;//Ä¿Â¼¼ÓÉÏÌõÄ¿Ãû
+		CString FileName = tem + "\\" + it->FileName;//ç›®å½•åŠ ä¸Šæ¡ç›®å
 		UINT8 Type = it->Type;
 		UINT32 DataOffset = it->DataOffset;
 		UINT32 c = it->CompressedSize;
@@ -184,29 +184,29 @@ int export_all(const char* out_directory)
 			continue;
 		}
 		ifstream in(wad_filePath, ios::binary);
-		in.seekg(DataOffset, ios::beg);//¶ÁÈ¡Êı¾İ
+		in.seekg(DataOffset, ios::beg);//è¯»å–æ•°æ®
 		in.read(c_buf, bufSize);
 		in.close();
 
 		CString FileName_tem = FileName;
-		FileName_tem.Replace("/", "\\");//×ª»»Ğ±¸Ü
-		char* Path = FileName_tem.GetBuffer(0);//×ªÎªchar*
+		FileName_tem.Replace("/", "\\");//è½¬æ¢æ–œæ 
+		char* Path = FileName_tem.GetBuffer(0);//è½¬ä¸ºchar*
 		FileName_tem.ReleaseBuffer();
 		CString p1 = Path;
 		
-		char* Name = PathFindFileNameA(Path);//È¡³öÎÄ¼şÃû
-		PathRemoveFileSpecA(Path);//É¾³ıÎÄ¼şÃû
+		char* Name = PathFindFileNameA(Path);//å–å‡ºæ–‡ä»¶å
+		PathRemoveFileSpecA(Path);//åˆ é™¤æ–‡ä»¶å
 
 		CString xg = "\\";
-		CString Path2 = Path + xg;//¼ÓÉÏÓÒĞ±¸Ü
-		MakeSureDirectoryPathExists(Path2);//´´½¨¶à¼¶Ä¿Â¼
+		CString Path2 = Path + xg;//åŠ ä¸Šå³æ–œæ 
+		MakeSureDirectoryPathExists(Path2);//åˆ›å»ºå¤šçº§ç›®å½•
 
 		size_t retSize = ZSTD_getDecSiz(c_buf, bufSize);
 		char* dec_buf = new char[retSize]();
-		size_t decSize = ZSTD_dec(dec_buf, retSize, c_buf, bufSize);//½âÑ¹Êı¾İ
+		size_t decSize = ZSTD_dec(dec_buf, retSize, c_buf, bufSize);//è§£å‹æ•°æ®
 
 		ofstream out(p1, ios::binary);
-		out.write(dec_buf, decSize);//Ğ´³öÎÄ¼ş
+		out.write(dec_buf, decSize);//å†™å‡ºæ–‡ä»¶
 		out.close();
 
 		delete[] dec_buf;
@@ -216,34 +216,34 @@ int export_all(const char* out_directory)
 	}
 	return 0;
 }
-//¼ÓÔØ¹şÏ£±í
+//åŠ è½½å“ˆå¸Œè¡¨
 bool load_hashes(const char* filePath)
 {
 	ifstream in(filePath, ios::binary);
 	if (!in.is_open())
 	{
-		cout << "load hashes error ¶ÁÈ¡¹şÏ£ÎÄ¼ş´íÎó" << endl;
+		cout << "load hashes error è¯»å–å“ˆå¸Œæ–‡ä»¶é”™è¯¯" << endl;
 		return false;
 	}
-	in.seekg(0, ios::end);//È¡ÎÄ¼ş´óĞ¡
+	in.seekg(0, ios::end);//å–æ–‡ä»¶å¤§å°
 	long long fileSize = in.tellg();
 	in.seekg(0, ios::beg);
-	char c_lineBuf[4096];//ÓÃÒ»¸ö±äÁ¿±£´æÒ»ĞĞµÄÄÚÈİ
+	char c_lineBuf[4096];//ç”¨ä¸€ä¸ªå˜é‡ä¿å­˜ä¸€è¡Œçš„å†…å®¹
 	CString s_line, s_Left, s_Right;
 	in.seekg(0, ios::beg);
 	while (!in.eof())
 	{
 		in.getline(c_lineBuf, sizeof(c_lineBuf));
 		s_line = c_lineBuf;
-		s_Left = s_line.Left(16);//¹şÏ£±íµÄ×ó±ß²¿·Ö
-		s_Left.MakeLower();//×ªĞ¡Ğ´
+		s_Left = s_line.Left(16);//å“ˆå¸Œè¡¨çš„å·¦è¾¹éƒ¨åˆ†
+		s_Left.MakeLower();//è½¬å°å†™
 		//cout << s_Left << endl;
-		s_Right = s_line.Right(s_line.GetLength() - 17);//¹şÏ£±íµÄÓÒ±ß²¿·Ö		
-		s_Right.Replace("\r\n", "");//È¥µô Windos linux ¸÷ÖÖ»»ĞĞ·û
+		s_Right = s_line.Right(s_line.GetLength() - 17);//å“ˆå¸Œè¡¨çš„å³è¾¹éƒ¨åˆ†		
+		s_Right.Replace("\r\n", "");//å»æ‰ Windos linux å„ç§æ¢è¡Œç¬¦
 		s_Right.Replace("\r", "");
 		//cout << s_Right << endl;
-		mp.insert(pair<CString, CString>(s_Left, s_Right));//°Ñ¹şÏ£±í×óÓÒÁ½¶Î¶ª½ømapÈİÆ÷ÀïÃæ
+		mp.insert(pair<CString, CString>(s_Left, s_Right));//æŠŠå“ˆå¸Œè¡¨å·¦å³ä¸¤æ®µä¸¢è¿›mapå®¹å™¨é‡Œé¢
 	}
-	in.close();//¹Ø±ÕÎÄ¼ş
+	in.close();//å…³é—­æ–‡ä»¶
 	return true;
 }
